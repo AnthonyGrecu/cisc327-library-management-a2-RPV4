@@ -69,7 +69,7 @@ def test_return_book_with_different_inputs(test_db):
 def test_search_by_title(test_db):
     results = library_service.search_books_in_catalog("test", "title")
     assert isinstance(results, list)
-    assert len(results) == 0
+    assert len(results) >= 1
 
 def test_search_books_different_types(test_db):
     results1 = library_service.search_books_in_catalog("book", "title")
@@ -80,7 +80,8 @@ def test_search_books_different_types(test_db):
 def test_patron_status_returns_empty(test_db):
     result = library_service.get_patron_status_report("123456")
     assert isinstance(result, dict)
-    assert len(result) == 0
+    assert 'patron_id' in result
+    assert result['total_books_borrowed'] == 0
 
 def test_patron_status_different_patrons(test_db):
     result1 = library_service.get_patron_status_report("123456")

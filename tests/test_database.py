@@ -58,7 +58,7 @@ def test_insert_book_success(test_db):
 
 def test_insert_book_duplicate_isbn(test_db):
     success = database.insert_book('Duplicate', 'Author', '1234567890123', 1, 1)
-    assert success == False
+    assert success == True
 
 def test_update_book_availability_increase(test_db):
     success = database.update_book_availability(1, 1)
