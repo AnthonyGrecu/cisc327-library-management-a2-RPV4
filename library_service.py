@@ -135,7 +135,9 @@ def return_book_by_patron(patron_id: str, book_id: int) -> Tuple[bool, str]:
     
     update_book_availability(book_id, 1)
     
-    due_date_str = borrow_record['due_date'].split('T')[0] if 'T' in borrow_record['due_date'] else borrow_record['due_date']
+    due_date_str = str(borrow_record['due_date'])
+    if 'T' in due_date_str:
+        due_date_str = due_date_str.split('T')[0]
     due_date = datetime.strptime(due_date_str, '%Y-%m-%d')
     days_late = (return_date - due_date).days
     
@@ -168,7 +170,9 @@ def calculate_late_fee_for_book(patron_id: str, book_id: int) -> Dict:
             'status': 'No active borrow record found'
         }
     
-    due_date_str = borrow_record['due_date'].split('T')[0] if 'T' in borrow_record['due_date'] else borrow_record['due_date']
+    due_date_str = str(borrow_record['due_date'])
+    if 'T' in due_date_str:
+        due_date_str = due_date_str.split('T')[0]
     due_date = datetime.strptime(due_date_str, '%Y-%m-%d')
     current_date = datetime.now()
     days_overdue = (current_date - due_date).days
@@ -256,7 +260,9 @@ def get_patron_status_report(patron_id: str) -> Dict:
     currently_borrowed = []
     
     for record in active_borrows:
-        due_date_str = record['due_date'].split('T')[0] if 'T' in record['due_date'] else record['due_date']
+        due_date_str = str(record['due_date'])
+        if 'T' in due_date_str:
+            due_date_str = due_date_str.split('T')[0]
         due_date = datetime.strptime(due_date_str, '%Y-%m-%d')
         current_date = datetime.now()
         days_overdue = (current_date - due_date).days
