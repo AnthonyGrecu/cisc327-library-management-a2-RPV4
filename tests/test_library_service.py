@@ -2,7 +2,7 @@ import pytest
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-import library_service
+from services import library_service
 
 def test_add_book_valid(test_db):
     success, message = library_service.add_book_to_catalog("New Book", "New Author", "9999999999999", 2)

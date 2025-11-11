@@ -1,0 +1,67 @@
+Assignment 2 - Implementation Experience Report
+
+Student: Anthony Grecu
+Student ID: 22RPV4
+Group: 2
+Course: CISC 327 - Software Quality Assurance
+Submission Date: October 14, 2025
+
+IMPLEMENTATION COMPLETION
+
+I successfully completed all four remaining functions (R4-R7) for the Library Management System:
+
+R4 - return_book_by_patron(): Validates patron IDs (6 digits), verifies active borrow records, calculates late fees ($0.50/day for first 7 days, $1.00/day after, $15 max), updates database, and increments available copies.
+
+R5 - calculate_late_fee_for_book(): API endpoint that retrieves borrow records, calculates days overdue based on 14-day period, applies tiered fee structure, returns dictionary with fee_amount, days_overdue, and status.
+
+R6 - search_books_in_catalog(): Enables search by title, author, or ISBN with partial case-insensitive matching for title/author using SQL LIKE, exact matching for ISBN.
+
+R7 - get_patron_status_report(): Joins borrow_records and books tables, calculates late fees for active borrows, returns patron_id, currently_borrowed list, total_late_fees, total_books_borrowed, and borrowing_history.
+
+Main challenge was date format handling - tests stored ISO timestamps while code expected date-only format, requiring robust parsing logic. All functions now pass 100% of tests in CI/CD pipeline.
+
+AI TOOL USAGE
+
+I used GitHub Copilot to generate 33 test cases through iterative prompting. Key prompts included:
+
+1. "Generate comprehensive test cases for return_book_by_patron function: valid return, invalid patron ID formats, non-existent book, no borrow record, with/without late fees"
+
+2. "Create test cases for calculate_late_fee_for_book testing boundaries: 0 days ($0), 4 days ($2), 11 days ($7.50), 26 days ($15 cap)"
+
+3. "Generate search_books_in_catalog tests: exact/partial title match, case-insensitive, ISBN exact, empty term, no results"
+
+4. "Create patron_status_report tests: valid patron, invalid IDs, active borrows, late fees, borrowing history"
+
+AI generated test skeletons in 30 minutes that required 2.75 hours of refinement (imports, fixture setup, assertion adjustments). Total time: 3.25 hours vs estimated 6 hours manual (48% savings). AI excelled at systematic boundary testing but needed human verification for project-specific fixtures and implementation details.
+
+TEST CASES ADDED
+
+Added 33 new tests in tests/test_new_implementations.py covering R4-R7 functions:
+
+Return Book (8 tests): Valid return, invalid patron IDs (short/long/non-numeric), nonexistent book, no borrow record, with/without late fees
+Late Fee (5 tests): Not overdue ($0), 4 days ($2), 11 days ($7.50), 26 days ($15 cap), no borrow record
+Search (9 tests): Exact/partial title, case-insensitive title/author, exact ISBN, empty term, no results
+Patron Status (11 tests): Valid patron, invalid IDs, active/no borrows, late fees, history, multiple patrons/books
+
+Updated 4 existing tests for completed implementations. Total suite: 77 tests (44 original + 33 new), 100% pass rate, 88% line coverage, 82% branch coverage.
+
+TEST COMPARISON: MANUAL VS AI-GENERATED
+
+Manual (44 tests, A1): 6.25 hours, covered database/business/route layers for R1-R3, strong integration testing, contextual understanding
+AI (33 tests, A2): 3.25 hours (48% faster), covered R4-R7, systematic boundary testing, comprehensive edge cases
+
+Quality Comparison:
+- Input Validation: AI tests included non-numeric patron IDs and specific error message validation (manual missed these)
+- Boundary Testing: AI systematically tested late fee tiers at 0, 4, 11, 26 days; manual only checked structure
+- Assertion Quality: AI more specific (exact values, error messages); manual more general
+- Coverage: Manual 82% line/75% branch, AI 94%/90% (new code), Combined 88%/82%
+
+Strengths/Weaknesses:
+Manual: Better integration testing, contextual understanding, realistic workflows; slower, missed edge cases
+AI: Faster, systematic boundaries, comprehensive validation; needed refinement for fixtures, lacked integration focus
+
+Key Finding: Hybrid approach optimal - AI for unit/boundary tests (speed + coverage), manual for integration (context + complexity). AI-assisted yielded 2× better quality-to-time ratio (0.243 vs 0.123).
+
+Report Completed: October 14, 2025
+Student: Anthony Grecu (22RPV4)
+Repository: https://github.com/AnthonyGrecu/cisc327-library-management-a2-RPV4
